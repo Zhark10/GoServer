@@ -1,0 +1,20 @@
+POST http://localhost:8888/users
+Content-Type: application/json
+
+{}
+
+###
+
+PUT http://localhost:8888/users/0
+Content-Type: application/json
+
+{}
+
+###
+
+PATCH http://localhost:8888/users/0
+Content-Type: application/json
+
+{}
+
+###

@@ -22,7 +22,7 @@ func NewHandler() handlers.Handler {
 func (h *handler) Register(router *httprouter.Router) {
 	router.GET(usersURL, h.getUsers)
 	router.GET(userURL, h.getUserById)
-	router.POST(userURL, h.createUser)
+	router.POST(usersURL, h.createUser)
 	router.PUT(userURL, h.updateUser)
 	router.PATCH(userURL, h.updatePartOfUser)
 	router.DELETE(userURL, h.deleteUser)
@@ -39,7 +39,7 @@ func (h *handler) getUserById(w http.ResponseWriter, r *http.Request, params htt
 }
 
 func (h *handler) createUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(204)
+	w.WriteHeader(200)
 	w.Write([]byte("user created"))
 }
 
