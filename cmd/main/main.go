@@ -3,22 +3,25 @@ package main
 import (
 	"github.com/julienschmidt/httprouter"
 	"goServer/internal/users"
-	"log"
+	"goServer/pkg/logging"
 	"net"
 	"net/http"
 	"time"
 )
 
 func main() {
-	log.Println("create router")
+	logger := logging.GetLogger()
+	logger.Info("create router")
 	router := httprouter.New()
-	log.Println("register user handle")
-	userHandler := users.NewHandler()
+	logger.Info("register user handle")
+	userHandler := users.NewHandler(logger)
 	userHandler.Register(router)
 	startServer(router)
 }
 
 func startServer(router *httprouter.Router) {
+	logger := logging.GetLogger()
+	logger.Info("start app")
 	listener, err := net.Listen("tcp", ":8888")
 
 	if err != nil {
@@ -31,5 +34,6 @@ func startServer(router *httprouter.Router) {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	log.Fatalln(server.Serve(listener))
+	logger.Info("server is listening on port 8888")
+	logger.Fatal(server.Serve(listener))
 }
