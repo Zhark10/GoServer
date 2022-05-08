@@ -30,14 +30,14 @@ func (hook *writerHook) Levels() []logrus.Level {
 	return hook.LogLevels
 }
 
-var e *logrus.Entry
+var entry *logrus.Entry
 
 type Logger struct {
 	*logrus.Entry
 }
 
 func GetLogger() Logger {
-	return Logger{e}
+	return Logger{entry}
 }
 
 func (l *Logger) getLoggerWithField(k string, v interface{}) Logger {
@@ -61,7 +61,8 @@ func init() {
 		panic(err)
 	}
 
-	allFile, err := os.OpenFile("logs/all.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0640)
+	const flag = os.O_CREATE | os.O_WRONLY | os.O_APPEND
+	allFile, err := os.OpenFile("logs/all.log", flag, 0640)
 	if err != nil {
 		panic(err)
 	}
@@ -75,5 +76,5 @@ func init() {
 
 	l.SetLevel(logrus.TraceLevel)
 
-	e = logrus.NewEntry(l)
+	entry = logrus.NewEntry(l)
 }
