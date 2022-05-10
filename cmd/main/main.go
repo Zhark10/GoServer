@@ -37,20 +37,22 @@ func startServer(router *httprouter.Router, cfg *config.Config) {
 	)
 
 	if cfg.Listen.Type == "sock" {
+		logger.Info("detect app path")
 		appDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 		if err != nil {
 			logger.Fatal(err)
 		}
 		logger.Info("create socket")
 		socketPath := path.Join(appDir, "app.sock")
-		logger.Debugf("socket path: %s", socketPath)
 
 		logger.Info("listen unix socket")
 		listener, listenErr = net.Listen("unix", socketPath)
+		logger.Infof("server is listening unix socket: %s", socketPath)
 	} else {
 		logger.Info("listen tcp")
 		address := fmt.Sprintf("%s:%s", cfg.Listen.BindIP, cfg.Listen.Port)
 		listener, listenErr = net.Listen("tcp", address)
+		logger.Infof("server is listening port %s:%s", cfg.Listen.BindIP, cfg.Listen.Port)
 	}
 
 	if listenErr != nil {
@@ -63,6 +65,5 @@ func startServer(router *httprouter.Router, cfg *config.Config) {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	logger.Infof("server is listening port %s:%s", cfg.Listen.BindIP, cfg.Listen.Port)
 	logger.Fatal(server.Serve(listener))
 }
