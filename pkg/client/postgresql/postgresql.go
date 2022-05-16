@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"goServer/pkg/utils"
 	"log"
 	"time"
 )
@@ -27,7 +28,7 @@ type StorageConfig struct {
 
 func NewClient(ctx context.Context, maxAttempts int, sc StorageConfig) (pool *pgxpool.Pool, err error) {
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", sc.Username, sc.Password, sc.Host, sc.Port, sc.Database)
-	err = DoWithTries(func() error {
+	err = utils.DoWithTries(func() error {
 		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 		defer cancel()
 
@@ -44,19 +45,4 @@ func NewClient(ctx context.Context, maxAttempts int, sc StorageConfig) (pool *pg
 	}
 
 	return pool, nil
-}
-
-func DoWithTries(fn func() error, attempts int, delay time.Duration) (err error) {
-	for attempts > 0 {
-		if err = fn(); err != nil {
-			time.Sleep(delay)
-			attempts--
-
-			continue
-		}
-
-		return nil
-	}
-
-	return
 }
