@@ -3,5 +3,10 @@
 is_debug: true
 listen:
   type: port
-  bind_ip: 0.0.0.0
-  port: 8888
+  port: 1234
+storage:
+  host: localhost
+  port: 5432
+  database: postgres
+  username: postgres
+  password: postgres
